@@ -1,0 +1,167 @@
+class InventoryManagementSystem:
+    def __init__(self):
+        self.inventory = {}
+
+    def add_item(self, item_id, name, quantity, price):
+        """
+        Add a new item to the inventory.
+        
+        Args:
+            item_id (str): Unique identifier for the item
+            name (str): Name of the item
+            quantity (int): Number of items in stock
+            price (float): Price of the item
+        """
+        if item_id in self.inventory:
+            print(f"Error: Item with ID {item_id} already exists.")
+            return False
+        
+        self.inventory[item_id] = {
+            'name': name,
+            'quantity': quantity,
+            'price': price
+        }
+        print(f"Item {name} added successfully with ID {item_id}.")
+        return True
+
+    def edit_item(self, item_id, name=None, quantity=None, price=None):
+        """
+        Edit an existing item in the inventory.
+        
+        Args:
+            item_id (str): Unique identifier for the item
+            name (str, optional): New name of the item
+            quantity (int, optional): New quantity of the item
+            price (float, optional): New price of the item
+        """
+        if item_id not in self.inventory:
+            print(f"Error: Item with ID {item_id} not found.")
+            return False
+        
+        
+        if name is not None:
+            self.inventory[item_id]['name'] = name
+        if quantity is not None:
+            self.inventory[item_id]['quantity'] = quantity
+        if price is not None:
+            self.inventory[item_id]['price'] = price
+        
+        print(f"Item {item_id} updated successfully.")
+        return True
+
+    def delete_item(self, item_id):
+        """
+        Delete an item from the inventory.
+        
+        Args:
+            item_id (str): Unique identifier for the item
+        """
+        if item_id not in self.inventory:
+            print(f"Error: Item with ID {item_id} not found.")
+            return False
+        
+        del self.inventory[item_id]
+        print(f"Item {item_id} deleted successfully.")
+        return True
+
+    def view_inventory(self):
+        """
+        Display all items in the inventory with improved alignment.
+        """
+        if not self.inventory:
+            print("Inventory is empty.")
+            return
+        
+        print("\n--- Current Inventory ---")
+        print(f"{'ID':<10}{'Name':<15}{'Quantity':<10}{'Price':<10}")
+        print("-" * 45)
+        
+        for item_id, details in self.inventory.items():
+            print(f"{item_id:<10}{details['name']:<15}{details['quantity']:<10}${details['price']:.2f}")
+
+    def search_items(self, query):
+        """
+        Search for items by name or ID.
+        
+        Args:
+            query (str): Search term
+        """
+        results = []
+        
+        for item_id, details in self.inventory.items():
+            if (query.lower() in item_id.lower() or 
+                query.lower() in details['name'].lower()):
+                results.append((item_id, details))
+        
+        if not results:
+            print("No items found matching the search query.")
+            return
+        
+        print("\n--- Search Results ---")
+        print(f"{'ID':<10}{'Name':<15}{'Quantity':<10}{'Price':<10}")
+        print("-" * 45)
+        
+        for item_id, details in results:
+            print(f"{item_id:<10}{details['name']:<15}{details['quantity']:<10}${details['price']:.2f}")
+
+def main():
+    """
+    Main function to demonstrate the Inventory Management System.
+    """
+    inventory_system = InventoryManagementSystem()
+    
+    inventory_system.add_item('APPL001', 'Apples', 50, 0.50)
+    inventory_system.add_item('BAN001', 'Bananas', 100, 0.25)
+    inventory_system.add_item('STRW001', 'Strawberries', 75, 1.50)
+    
+    while True:
+        print("\n--- Inventory Management System ---")
+        print("1. Add Item")
+        print("2. Edit Item")
+        print("3. Delete Item")
+        print("4. View Inventory")
+        print("5. Search Items")
+        print("6. Exit")
+        
+        choice = input("Enter your choice (1-6): ")
+        
+        if choice == '1':
+            item_id = input("Enter Item ID: ")
+            name = input("Enter Item Name: ")
+            quantity = int(input("Enter Quantity: "))
+            price = float(input("Enter Price: "))
+            inventory_system.add_item(item_id, name, quantity, price)
+        
+        elif choice == '2':
+            item_id = input("Enter Item ID to edit: ")
+            name = input("Enter new name (press Enter to skip): ")
+            quantity = input("Enter new quantity (press Enter to skip): ")
+            price = input("Enter new price (press Enter to skip): ")
+            
+           
+            name = name if name else None
+            quantity = int(quantity) if quantity else None
+            price = float(price) if price else None
+            
+            inventory_system.edit_item(item_id, name, quantity, price)
+        
+        elif choice == '3':
+            item_id = input("Enter Item ID to delete: ")
+            inventory_system.delete_item(item_id)
+        
+        elif choice == '4':
+            inventory_system.view_inventory()
+        
+        elif choice == '5':
+            query = input("Enter search term: ")
+            inventory_system.search_items(query)
+        
+        elif choice == '6':
+            print("Exiting Inventory Management System.")
+            break
+        
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
